@@ -1,0 +1,19 @@
+<mat-sidenav-container class="main__container">
+    <mat-sidenav opened mode="side" class="main__menu mat-elevation-z1">
+        <div *ngFor="let item of menuItems">
+            <button mat-button *ngIf="item.visible"
+                    class="main__menu_item"
+                    [ngClass]="{'main__menu_item_active': item.active}"
+                    (click)="onMenuItemClick(item)">
+                <mat-icon *ngIf="item.icon">{{ item.icon }}</mat-icon>
+                <span>{{ item.title | uppercase}}</span>
+            </button>
+        </div>
+
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="main__content mat-elevation-z0">
+            <router-outlet></router-outlet>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

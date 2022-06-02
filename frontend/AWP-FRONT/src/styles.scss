@@ -1,0 +1,56 @@
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import "./settings";
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background: $backgroundColor;
+}
+
+.table-container {
+  padding: 40px;
+  text-align: left;
+}
+
+.mat-row :hover {
+  cursor: pointer;
+}
+
+mat-card-header a:visited {
+  color: $primaryDarkColor;
+}
+
+mat-card-header a:hover {
+  color: $primaryColor;
+}
+
+mat-card-title {
+  color: $primaryDarkColor;
+}
+
+mat-list-item h4 {
+  color: $primaryDarkColor;
+}
+
+mat-list-item p {
+  font-size: 1.2em !important;
+}
+
+.edit-form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.edit-form-group p:first-child {
+  margin-top: 32px;
+}
+
+
+.sum-rub:after { content:"\20BD"; }
+
+.period-month:after { content: ' мес.'; }
+
+

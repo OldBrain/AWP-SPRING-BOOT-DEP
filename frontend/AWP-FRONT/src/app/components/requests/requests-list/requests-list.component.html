@@ -1,0 +1,92 @@
+<mat-card>
+    <mat-card-title>{{tableTitle | uppercase}}</mat-card-title>
+    <mat-card-content>
+        <div class="table-container">
+            <mat-form-field appearance="standard">
+                <mat-label>Поиск</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Напр. Иванов" #input>
+            </mat-form-field>
+
+            <mat-button-toggle-group class="status-filter" [formControl]="requestStatusFilter" (change)="onFilterChange()">
+                <mat-button-toggle value="">Все заявки</mat-button-toggle>
+                <mat-button-toggle *ngFor="let status of RequestStatus | keyvalue"
+                        [value]=status.key>{{creditRequestService.renderRequestStatus(status.value)}}</mat-button-toggle>
+            </mat-button-toggle-group>
+
+            <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+                <!-- Menu button Column -->
+                <ng-container matColumnDef="menu" class="menu-column">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let request">
+                        <button mat-icon-button
+                                [matMenuTriggerFor]="menu"
+                                [matMenuTriggerData]="{requestId: request.id, status: request.status}"
+                                aria-label="Открыть меню">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <!-- ID Column -->
+                <ng-container matColumnDef="id" class="id-column">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header="id"> № заявки </th>
+                    <td mat-cell *matCellDef="let request" (click)="onRequestClick(request.id)"> {{request.id}} </td>
+                </ng-container>
+
+                <!-- Date Column -->
+                <ng-container matColumnDef="date" class="date-column">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header="date"> Создана </th>
+                    <td mat-cell *matCellDef="let request"> {{request.createdAt}} </td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="name" class="name-column">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header="name"> Заявитель </th>
+                    <td mat-cell *matCellDef="let request"> {{request.clientName}} </td>
+                </ng-container>
+
+                <!-- Sum Column -->
+                <ng-container matColumnDef="sum" class="sum-column">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header="sum"> Сумма, руб. </th>
+                    <td mat-cell *matCellDef="let request" class="sum-rub"> {{request.sum}} </td>
+                </ng-container>
+
+                <!-- Period Column -->
+                <ng-container matColumnDef="period" class="period-column">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header="period"> Срок </th>
+                    <td mat-cell *matCellDef="let request" class="period-month"> {{request.period}} </td>
+                </ng-container>
+
+                <!-- Status Column -->
+                <ng-container matColumnDef="status" class="status-column">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header="status"> Статус </th>
+                    <td mat-cell *matCellDef="let request"> {{creditRequestService.renderRequestStatus(request.status)}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let request columns: displayedColumns;"></tr>
+
+                <!-- Row shown when there is no matching data. -->
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">Не найдено данных по запросу {{input.value}}</td>
+                </tr>
+            </table>
+        </div>
+    </mat-card-content>
+    <mat-card-footer>
+        <mat-paginator
+                [pageSizeOptions]="[10, 25, 50]"
+                aria-label="Выберите страницу"></mat-paginator>
+    </mat-card-footer>
+</mat-card>
+
+<mat-menu #menu="matMenu">
+    <ng-template matMenuContent let-id="requestId" let-status="status">
+        <button mat-menu-item [disabled]="status !== 'WAITING'"
+                (click)="onEditClick(id)">
+            <mat-icon>edit</mat-icon>
+            <span>Редактировать заявку</span>
+        </button>
+    </ng-template>
+</mat-menu>
+
